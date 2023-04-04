@@ -1,19 +1,31 @@
-const express = require("express")
-const cors = require("cors")
-const bodyParser = require("body-parser")
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const app = express()
-const mongoose = require("mongoose")
+const app = express();
+const connectDB = require("./db/connect");
+const todoRoutes = require("./routes/router")
 
-app.use(bodyParser.json())
-app.use(cors)
-dotenv.config({path: "./config.env"})
+app.use(bodyParser.json());
+app.use(cors());
+dotenv.config({ path: "./config.env" });
 
-mongoose
-.connect(process.env.MONGO_URI)
-.then(() => console.log("conected to mongodb"))
-.catch((err) => console.log(err))
+app.use("/api", todoRoutes)
 
-app.listen(process.env.PORT, () => {
-    console.log(`server is connected at ${process.env.PORT} and the uri is ${process.env.MONGO_URI}`)
-})
+
+const start = async () => {
+  try {
+    // this way is gonna connect to mongodb before running the server
+    await connectDB(process.env.MONGO_URI);
+
+    app.listen(process.env.PORT, () => {
+      console.log(
+        `server is connected at ${process.env.PORT}`
+      );
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+start();
