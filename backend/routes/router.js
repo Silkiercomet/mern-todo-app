@@ -1,8 +1,10 @@
 const express = require('express')
 const todoRoutes = express.Router()
 
-const {getTodos} = require("../controlls/controllers")
+const {getTodos,updateTodo,createTodo} = require("../controlls/controllers")
 
-todoRoutes.get('/', getTodos)
+todoRoutes.route("/").get(getTodos).post(createTodo)
+todoRoutes.route("/:userId").patch(updateTodo)
+
 
 module.exports = todoRoutes
