@@ -13,12 +13,17 @@ const getTodos = async (req, res) => {
 };
 
 const updateTodo = async (req, res) => {
-  // tomamos el parametro (es definido por :userId en la url)
-  const { userId } = req.params;
-  // tomamos los query
-  const { todo, description } = req.query;
-  console.log(userId, description);
-  res.status(200).json(todo);
+  try {
+    // tomamos el parametro (es definido por :userId en la url)
+    const { userId } = req.params;
+    // tomamos los query y los enviamos todos a remplazar los querys presentes en userId
+    const modifiedTodo = await modelTodo.findByIdAndUpdate(userId, req.query, {
+      new: true,
+    });
+    res.status(200).send(modifiedTodo);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 };
 
 const createTodo = async (req, res) => {
@@ -31,11 +36,24 @@ const createTodo = async (req, res) => {
   if (description) {
     newTodo["description"] = description;
   }
-  try{
-    await newTodo.save();
-  } catch(err){
-    console.log(err)
+  try {
+    let output = await newTodo.save();
+    res.send(output);
+    console.log(output);
+  } catch (err) {
+    res.status(500).send(err);
   }
 };
 
-module.exports = { getTodos, updateTodo, createTodo };
+const deleteTodo = async (req, res) => {
+  const { userId } = req.params;
+  console.log(userId);
+  try {
+    const deletedItem = await modelTodo.findByIdAndDelete(userId);
+    res.send(deletedItem);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
+module.exports = { getTodos, updateTodo, createTodo, deleteTodo };
