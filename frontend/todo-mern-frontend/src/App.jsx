@@ -1,32 +1,79 @@
-import { useState, useEffect } from 'react'
+import './App.css';
+import {useState, useContext, useEffect} from 'react'
+import { ThemeContext } from './components/Theme/ThemeContext';
+import Header from './components/Header/Header';
+import TodoContainer from "./components/Todo__container/TodoContainer"
 
-import './App.css'
-import TodoForm from './components/TodoForm'
-import TodoItem from './components/TodoItem'
 
 function App() {
-  const [todo, setTodo] = useState([])
-
-  useEffect(() => {
-    ( async () => {
-      try{
-        let res = await fetch("http://localhost:3001/api/")
-        let data = await res.json()
-        setTodo(data)
-      } catch(err){
-        console.log(err)
-      }
-    })
-  }, [])
+  //--------------------Hooks------------------>
   
-  return (
-    <div className="App">
-      <TodoForm />
-      <div className="container__todo">
-        {todo.map(e => <TodoItem todo={todo} key={_id} {...e} />)}
-      </div>
-    </div>
-  )
-}
-
-export default App
+    const [items, setItem] = useState(JSON.parse(localStorage.getItem('shoppinglist')) || [])
+    const [{theme, isDark}, toggleTheme] = useContext(ThemeContext)
+    const [newItems, setNewItems] = useState("");
+    const [active,setActive] = useState(0);
+  
+    useEffect(() => {
+      localStorage.setItem('shoppinglist', JSON.stringify(items));
+    }, [items])
+    useEffect(() => {
+      console.log(active)
+    }, [active])
+  //------------------------------------------->
+  //-----------------functions----------------->
+    const setstorage = (x) => {
+      //x an array with the todo's
+      setItem(x);
+      localStorage.setItem("shoppinglist", JSON.stringify(x));
+    };
+    const AddToList = (item) => {
+      //add new items
+      const id = items.length ? items[items.length - 1].id + 1 : 1;
+      const myNewItem = { id, checked: false, item };
+      const myNewList = [...items, myNewItem];
+      setstorage(myNewList);
+    };
+    const HandleCheck = (id) => {
+      const listItems = items.map((item) =>
+        item.id === id ? { ...item, checked: !item.checked } : item
+      );
+      setstorage(listItems);
+    };
+  
+    const HandleDelete = (id) => {
+      const listItems = items.filter((item) => item.id !== id);
+      setstorage(listItems);
+    };
+    const HandleSubmit = () => {
+  
+      if (!newItems) return;
+      //add item
+      AddToList(newItems);
+      setNewItems("");
+    };
+  //------------------------------------------->
+  
+    return (
+      <body className="App" style={{ backgroundColor: theme.backgroundColor, color: theme.color }}>
+  
+        <Header isDark={isDark}/>
+        <TodoContainer 
+          items={items}
+          isDark={isDark} 
+          toggleTheme={toggleTheme}
+          newItems={newItems}
+          setNewItems={setNewItems}
+          HandleSubmit={HandleSubmit}
+          HandleCheck={HandleCheck}
+          HandleDelete={HandleDelete}
+          setActive={setActive}
+          active={active}
+          setItem={setItem}
+        />
+  
+        
+      </body>
+    );
+  }
+  
+  export default App;
