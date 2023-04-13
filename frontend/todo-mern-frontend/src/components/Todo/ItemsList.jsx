@@ -33,7 +33,7 @@ const ItemList = ({setActive,active,isDark, items, HandleCheck, HandleDelete, se
         {obj[active].map((item) => (
             <LineItem
             isDark={isDark}
-            key={item.id}
+            key={item._id}
             item={item}
             HandleCheck={HandleCheck}
             HandleDelete={HandleDelete}
