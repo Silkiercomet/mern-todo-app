@@ -14,12 +14,12 @@ const ItemList = ({setActive,active,isDark, items, HandleCheck, HandleDelete, se
         '0':items.map((item) => item)
         ,
         '1':items.filter((item) => {
-            if(item.checked === false){
+            if(item.check === false){
                 return item
             }
         }),
         '2':items.filter((item) => {
-            if(item.checked !== false){
+            if(item.check !== false){
                 return item
             }
         })
