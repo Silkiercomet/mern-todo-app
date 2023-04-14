@@ -39,7 +39,6 @@ const createTodo = async (req, res) => {
   try {
     let output = await newTodo.save();
     res.send(output);
-    console.log(output);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -47,7 +46,7 @@ const createTodo = async (req, res) => {
 
 const deleteTodo = async (req, res) => {
   const { userId } = req.params;
-  console.log(userId);
+
   try {
     const deletedItem = await modelTodo.findByIdAndDelete(userId);
     res.send(deletedItem);

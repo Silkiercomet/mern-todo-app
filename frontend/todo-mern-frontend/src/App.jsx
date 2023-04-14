@@ -41,11 +41,15 @@ function App() {
     };
 
     const AddToList = (item) => {
-      //add new items
-      const id = items.length ? items[items.length - 1].id + 1 : 1;
-      const myNewItem = { id, checked: false, item };
-      const myNewList = [...items, myNewItem];
-      setstorage(myNewList);
+      (async () => {
+        try {
+          const response = await axios.get(`http://localhost:3001/api/`);
+          setItem(response.data)
+          return
+        } catch (error) {
+          console.log(error);
+        }
+      })()
     };
     const HandleCheck = (id) => {
       let status = false
@@ -59,23 +63,36 @@ function App() {
       );
       (async () => {
         try {
-          const response = await axios.patch(`http://localhost:3001/api/${id}?check=${status}`);
-          console.log(response);
+         await axios.patch(`http://localhost:3001/api/${id}?check=${status}`);
         } catch (error) {
           console.log(error);
         }
       })()
-      console.log(listItems)
+
       setstorage(listItems);
     };
   
     const HandleDelete = (id) => {
-      const listItems = items.filter((item) => item.id !== id);
+      const listItems = items.filter((item) => item._id !== id);
+      (async () => {
+        try {
+         await axios.delete(`http://localhost:3001/api/${id}`);
+        } catch (error) {
+          console.log(error);
+        }
+      })()
       setstorage(listItems);
     };
     const HandleSubmit = () => {
   
       if (!newItems) return;
+      (async () => {
+        try {
+         await axios.post(`http://localhost:3001/api/?todo=${newItems}`);
+        } catch (error) {
+          console.log(error);
+        }
+      })()
       //add item
       AddToList(newItems);
       setNewItems("");
