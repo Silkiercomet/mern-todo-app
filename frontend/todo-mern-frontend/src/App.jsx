@@ -23,7 +23,7 @@ function App() {
     useEffect(() => {
       (async () => {
         try {
-          const response = await axios.get(`http://localhost:3001/api/`);
+          const response = await axios.get(`https://todo-api-81fo.onrender.com/api/`);
           setItem(response.data)
           return
         } catch (error) {
@@ -43,7 +43,7 @@ function App() {
     const AddToList = (item) => {
       (async () => {
         try {
-          const response = await axios.get(`http://localhost:3001/api/`);
+          const response = await axios.get(`https://todo-api-81fo.onrender.com/api/`);
           setItem(response.data)
           return
         } catch (error) {
@@ -63,7 +63,7 @@ function App() {
       );
       (async () => {
         try {
-         await axios.patch(`http://localhost:3001/api/${id}?check=${status}`);
+         await axios.patch(`https://todo-api-81fo.onrender.com/api/${id}?check=${status}`);
         } catch (error) {
           console.log(error);
         }
@@ -76,7 +76,7 @@ function App() {
       const listItems = items.filter((item) => item._id !== id);
       (async () => {
         try {
-         await axios.delete(`http://localhost:3001/api/${id}`);
+         await axios.delete(`https://todo-api-81fo.onrender.com/api/${id}`);
         } catch (error) {
           console.log(error);
         }
@@ -88,7 +88,7 @@ function App() {
       if (!newItems) return;
       (async () => {
         try {
-         await axios.post(`http://localhost:3001/api/?todo=${newItems}`);
+         await axios.post(`https://todo-api-81fo.onrender.com/api/?todo=${newItems}`);
         } catch (error) {
           console.log(error);
         }
